@@ -1,0 +1,175 @@
+[
+  {
+    "id": "flow-SnagReport-approval",
+    "name": "SnagReport Approval Flow",
+    "edges": [
+      {
+        "id": "gen_1783280527519_23",
+        "sourceNodeId": "gen_1783280527519_21",
+        "targetNodeId": "gen_1783280527519_22"
+      },
+      {
+        "id": "gen_1783280527520_25",
+        "branch": "true",
+        "sourceNodeId": "gen_1783280527519_22",
+        "targetNodeId": "gen_1783280527519_24"
+      },
+      {
+        "id": "gen_1783280527520_27",
+        "sourceNodeId": "gen_1783280527519_24",
+        "targetNodeId": "gen_1783280527520_26"
+      },
+      {
+        "id": "gen_1783280527520_30",
+        "sourceNodeId": "gen_1783280527520_28",
+        "targetNodeId": "gen_1783280527520_29"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "gen_1783280527519_21",
+        "type": "trigger",
+        "label": "On SnagReport Submit",
+        "trigger": {
+          "type": "on-field-change",
+          "fieldName": "status",
+          "resourceName": "SnagReport"
+        },
+        "position": {
+          "x": 300,
+          "y": 50
+        }
+      },
+      {
+        "id": "gen_1783280527519_22",
+        "type": "condition",
+        "label": "Status = PendingCRS?",
+        "position": {
+          "x": 300,
+          "y": 160
+        },
+        "condition": {
+          "logic": "and",
+          "rules": [
+            {
+              "field": "triggerData.status",
+              "value": "2",
+              "operator": "equals"
+            }
+          ]
+        }
+      },
+      {
+        "id": "gen_1783280527519_24",
+        "type": "approval",
+        "label": "SnagReport Approval",
+        "approval": {
+          "steps": [
+            {
+              "name": "Certifying Staff Onayı",
+              "actions": [
+                {
+                  "type": "approve",
+                  "label": "CRS Ver / Kapat"
+                },
+                {
+                  "type": "revise",
+                  "label": "Revize Et",
+                  "requiredFields": [
+                    "revisionNote"
+                  ]
+                }
+              ],
+              "assigneeType": "field",
+              "assigneeValue": "certifyingStaffId"
+            }
+          ],
+          "onCompleteEvent": "SnagReport-approval-completed",
+          "revisionAssignee": "previous-step",
+          "trackRevisionHistory": true
+        },
+        "position": {
+          "x": 300,
+          "y": 280
+        }
+      },
+      {
+        "id": "gen_1783280527520_26",
+        "type": "action",
+        "label": "Send Approval Email",
+        "action": {
+          "type": "send-email",
+          "config": {
+            "to": "{{assigneeEmail}}",
+            "body": "<p>Sayın Certifying Staff,</p><p><strong>{{triggerData.reportNumber}}</strong> numaralı snag raporu CRS onayınızı beklemektedir.</p><p>Konu: {{triggerData.title}}</p>",
+            "subject": "{{triggerData.reportNumber}} Snag Raporu — CRS Onayı Bekleniyor",
+            "contentType": "html"
+          }
+        },
+        "position": {
+          "x": 300,
+          "y": 400
+        }
+      },
+      {
+        "id": "gen_1783280527520_28",
+        "type": "trigger",
+        "label": "On SnagReport Approved",
+        "trigger": {
+          "type": "manual",
+          "resourceName": "SnagReport"
+        },
+        "position": {
+          "x": 700,
+          "y": 50
+        }
+      },
+      {
+        "id": "gen_1783280527520_29",
+        "type": "action",
+        "label": "Send Completion Email",
+        "action": {
+          "type": "send-email",
+          "config": {
+            "cc": "{{departmentEmails}}",
+            "to": "{{creatorEmail}}",
+            "body": "<p>{{triggerData.formNo}} numarali formun onay sureci tamamlanmistir.</p>",
+            "subject": "{{triggerData.formNo}} — Tum onaylar tamamlandi",
+            "contentType": "html"
+          }
+        },
+        "position": {
+          "x": 700,
+          "y": 160
+        }
+      }
+    ],
+    "enabled": true,
+    "createdAt": "2026-07-05T19:42:07.519Z",
+    "updatedAt": "2026-07-05T19:42:07.519Z",
+    "variables": [
+      {
+        "name": "assigneeEmail",
+        "type": "string",
+        "defaultValue": ""
+      },
+      {
+        "name": "creatorEmail",
+        "type": "string",
+        "defaultValue": ""
+      },
+      {
+        "name": "departmentEmails",
+        "type": "string",
+        "defaultValue": ""
+      },
+      {
+        "name": "formLink",
+        "type": "string",
+        "defaultValue": ""
+      }
+    ],
+    "description": "Auto-generated approval flow for SnagReport. Customize email templates and add conditions as needed.",
+    "resourceName": "SnagReport"
+  }
+]

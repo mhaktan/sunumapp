@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>SunumApp</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Abp.AspNetCore" Version="8.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.*" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.*" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SunumApp.Application\SunumApp.Application.csproj" />
+    <ProjectReference Include="..\SunumApp.EntityFrameworkCore\SunumApp.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+</Project>
